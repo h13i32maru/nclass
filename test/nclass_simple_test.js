@@ -1,6 +1,6 @@
 TestCase('nClassSimpleTest', {
     setUp: function() {
-        this.ClassA = nClass.create({
+        this.ClassA = nClass({
             $static: {
                 x: [10, 20],
                 num: 0,
@@ -23,7 +23,7 @@ TestCase('nClassSimpleTest', {
             }
         });
 
-        this.ClassB = nClass.create({
+        this.ClassB = nClass({
             say: function() {
                 return 'ClassB#sayB';
             }
@@ -89,7 +89,7 @@ TestCase('nClassSimpleTest', {
 
     'test property error': function() {
         try {
-            var ClassA = nClass.create({
+            var ClassA = nClass({
                 obj: {},
             });
         } catch(e) {
@@ -102,7 +102,7 @@ TestCase('nClassSimpleTest', {
 
     'test argument error': function() {
         try {
-            var ClassA = nClass.create('foo', {});
+            var ClassA = nClass();
         } catch(e) {
             assertTrue(e instanceof nClass.InvalidArgumentError);
             return;

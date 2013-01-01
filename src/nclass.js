@@ -1,4 +1,6 @@
-nClass = {
+nClass = (function(){
+    'use strict';
+
     /**
      * 引数にスーパークラスの関数が渡されるように元の関数をラップして返す。
      * @param {Object} superObjスーパークラスのオブジェクト.
@@ -6,11 +8,9 @@ nClass = {
      * @param {function(...)} func ラップする関数.
      * @return {function(...)} ラップした関数.
      */
-    _wrapFunction: function(superObj, funcname, func) {
-        'use strict';
-
+    var _wrapFunction = function(superObj, funcname, func) {
         if (typeof superObj[funcname] !== 'function') {
-            throw new this.OverrideError(funcname);
+            throw new OverrideError(funcname);
         }
 
         return function() {
@@ -19,84 +19,59 @@ nClass = {
             var arg = [$super].concat(Array.prototype.slice.call(arguments, 0));
             return func.apply(this, arg);
         };
-    },
+    };
 
     /**
      * 関数の仮引数名のリストを取得する.
      * @param {function(...)} func 対象とする関数.
      * @return {Array.<string>} 仮引数名の配列.
      */
-    _argumentNames: function(func) {
-        'use strict';
-
+    var _argumentNames = function(func) {
         var names = func.toString().match(/^[\s\(]*function[^(]*\(([^)]*)\)/)[1]
           .replace(/\/\/.*?[\r\n]|\/\*(?:.|[\r\n])*?\*\//g, '')
           .replace(/\s+/g, '').split(',');
         return names.length == 1 && !names[0] ? [] : names;
-    },
+    };
 
     /**
      * スーパークラスを指定せずにクラスを生成したときのクラス.
      */
-    _rootClass: (function() {
-        'use strict';
-
-        var _rootClass = function() {};
-        _rootClass.prototype.initialize = function() {};
-        return _rootClass;
-    })(),
+    var _rootClass = function() {};
+    _rootClass.prototype.initialize = function() {};
 
     /**
      * プロパティの型が不正の場合のエラー.
      * @param {string} propName 不正なプロパティの名前.
      * @return {PropertyTypeError}
      */
-    PropertyTypeError: (function(){
-        'use strict';
-
-        var E = function(propName) {
-            if (!E.prototype.message) {
-                E.prototype = new Error();
-                E.prototype.message = propName + ' is not primitive type. not ';
-                E.prototype.name = 'PropertyTypeError';
-                return new E();
-            }
+    var PropertyTypeError = function(propName) {
+        if (!PropertyTypeError.prototype.message) {
+            PropertyTypeError.prototype = new Error();
+            PropertyTypeError.prototype.message = propName + ' is not primitive type. not ';
+            PropertyTypeError.prototype.name = 'PropertyTypeError';
+            return new PropertyTypeError();
         }
-        return E;
-    })(),
+    };
 
-    OverrideError: (function(){
-        'use strict';
-
-        var E = function(funcname) {
-            if (!E.prototype.message) {
-                E.prototype = new Error();
-                E.prototype.message = funcname + ' is not a function in super class.';
-                E.prototype.name = 'OverrideError';
-                return new E();
-            }
+    var OverrideError = function(funcname) {
+        if (!OverrideError.prototype.message) {
+            OverrideError.prototype = new Error();
+            OverrideError.prototype.message = funcname + ' is not a function in super class.';
+            OverrideError.prototype.name = 'OverrideError';
+            return new OverrideError();
         }
-        return E;
-    })(),
+    };
 
-    InvalidArgumentError: (function(){
-        'use strict';
-
-        var E = function(expection, actual) {
-            if (!E.prototype.message) {
-                E.prototype = new Error();
-                E.prototype.message = 'arguments count was expecting ' + expection.join(' or ') + ', ' + actual + ' was actually.';
-                E.prototype.name = 'InvalidArgumentError';
-                return new E();
-            }
+    var InvalidArgumentError = function(expection, actual) {
+        if (!InvalidArgumentError.prototype.message) {
+            InvalidArgumentError.prototype = new Error();
+            InvalidArgumentError.prototype.message = 'arguments count was expecting ' + expection.join(' or ') + ', ' + actual + ' was actually.';
+            InvalidArgumentError.prototype.name = 'InvalidArgumentError';
+            return new InvalidArgumentError();
         }
-        return E;
-    })(),
+    };
 
-
-    _create: function(superClass, protoObj) {
-        'use strict';
-
+    var _create = function(superClass, protoObj) {
         var constructor = function() {
             if (typeof this.initialize === 'function') {
                 this.initialize.apply(this, arguments);
@@ -117,13 +92,13 @@ nClass = {
 
             if (typeof value === 'object' && value !== null) {
                 if (key !== '$static') {
-                    throw new this.PropertyTypeError(key);
+                    throw new PropertyTypeError(key);
                 }
             }
 
             if (typeof value === 'function') {
-                if (this._argumentNames(value)[0] === '$super') {
-                    value = this._wrapFunction(superObjForWrap, key, value);
+                if (_argumentNames(value)[0] === '$super') {
+                    value = _wrapFunction(superObjForWrap, key, value);
                 }
             }
             constructor.prototype[key] = value;
@@ -132,25 +107,31 @@ nClass = {
         constructor.prototype.constructor = constructor;
 
         return constructor;
-    },
+    };
 
-    create: function(protoObj) {
-        'use strict';
-
-        if (arguments.length !== 1) {
-            throw new this.InvalidArgumentError([1], arguments.length);
+    var create = function() {
+        var protoObj;
+        var superClass;
+        switch (arguments.length) {
+        case 1:
+            superClass = _rootClass;
+            protoObj = arguments[0];
+            break;
+        case 2:
+            superClass = arguments[0];
+            protoObj = arguments[1];
+            break;
+        default:
+            throw new InvalidArgumentError([1, 2], arguments.length);
         }
 
-        return this._create(this._rootClass, protoObj);
-    },
+        return _create(superClass, protoObj);
 
-    extend: function(superClass, protoObj) {
-        'use strict';
+    };
 
-        if (arguments.length !== 2) {
-            throw new this.InvalidArgumentError([2], arguments.length);
-        }
+    create.PropertyTypeError = PropertyTypeError;
+    create.InvalidArgumentError = InvalidArgumentError;
+    create.OverrideError = OverrideError;
 
-        return this._create(superClass, protoObj);
-    }
-};
+    return create;
+})();

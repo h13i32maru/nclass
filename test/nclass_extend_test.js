@@ -1,6 +1,6 @@
 TestCase('nClassExtendTest', {
     setUp: function() {
-        this.ClassA = nClass.create({
+        this.ClassA = nClass({
             $static: {
                 x: null
             },
@@ -22,7 +22,7 @@ TestCase('nClassExtendTest', {
             }
         });
 
-        this.ClassB = nClass.extend(this.ClassA, {
+        this.ClassB = nClass(this.ClassA, {
             initialize: function($super, arg1, arg2) {
                 $super(arg1);
 
@@ -40,7 +40,7 @@ TestCase('nClassExtendTest', {
             }
         });
 
-        this.ClassC = nClass.extend(this.ClassB, {
+        this.ClassC = nClass(this.ClassB, {
             overrideABC: function($super) {
                 var res = $super();
                 res.push('ClassC');
@@ -125,8 +125,8 @@ TestCase('nClassExtendTest', {
 
     'test override error': function() {
         try {
-            var ClassA = nClass.create({});
-            var ClassB = nClass.extend(ClassA, {
+            var ClassA = nClass({});
+            var ClassB = nClass(ClassA, {
                 say: function($super) {
                 }
             });
@@ -136,15 +136,4 @@ TestCase('nClassExtendTest', {
         }
         fail();
     },
-
-    'test argument error': function() {
-        try {
-            var ClassB = nClass.extend({});
-        } catch(e) {
-            assertTrue(e instanceof nClass.InvalidArgumentError);
-            return;
-        }
-
-        fail();
-    }
 });
