@@ -1,11 +1,13 @@
 # nClass
+nClass is pure javascript class system.
 
+## loading script
 ```html
 <script src="path/to/nclass.js"></script>
 ```
 
 ## Simple class
-`nClass` function create class using prototype object.
+`nClass(prototypeObject)` create class using prototype object.
 
 ```javascript
 var ClassA = nClass({
@@ -38,7 +40,7 @@ console.log(a.list); //['food']
 ```
 
 ## Extend class
-`nClass` function create class using super class.
+`nClass(superClass, prototypeObject)` create class using super class.
 
 ```javascript
 var ClassA = nClass({
@@ -91,6 +93,8 @@ console.log(b.list); //['car', 'book']
 ```
 
 ## Static property
+`$static` is common property in the same class.
+
 ```javascript
 var ClassA = nClass({
     $static: {
@@ -114,7 +118,7 @@ console.log(a2.$static.data); //['food', 'book']
 
 ## Attention
 ### Property type error
-Prototype object property are primitive or null.
+property in prototype object is primitive or null.
 
 ```javascript
 var ClassA = nClass({
