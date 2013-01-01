@@ -9,9 +9,13 @@ TestCase('nClassSimpleTest', {
             arg1: null,
             arg2: null,
             
+            obj: null,
+            
             initialize: function(arg1, arg2) {
                 this.arg1 = arg1;
                 this.arg2 = arg2;
+
+                this.obj = {};
             },
 
             say: function() {
@@ -26,17 +30,17 @@ TestCase('nClassSimpleTest', {
         });
     },
 
-    'test simple class': function() {
-        var a = new this.ClassA();
-        assertEquals('ClassA#say', a.say());
-    },
-
     'test class instanceof': function() {
         var a = new this.ClassA();
         var b = new this.ClassB();
 
         assertTrue(a instanceof this.ClassA);
         assertFalse(b instanceof this.ClassA);
+    },
+
+    'test method': function() {
+        var a = new this.ClassA();
+        assertEquals('ClassA#say', a.say());
     },
 
     'test initialize function': function() {
@@ -46,6 +50,17 @@ TestCase('nClassSimpleTest', {
 
         assertEquals(arg1, a.arg1);
         assertSame(arg2, a.arg2);
+    },
+
+    'test property': function() {
+        var a1 = new this.ClassA();
+        var a2 = new this.ClassA();
+
+        a1.obj['food'] = 'rice';
+
+        assertEquals(a1.obj['food'], 'rice');
+        assertUndefined(a2.obj['food']);
+        assertNotSame(a1.obj, a2.obj);
     },
 
     'test static property': function() {
@@ -70,5 +85,29 @@ TestCase('nClassSimpleTest', {
         var a = new this.ClassA();
 
         assertSame(this.ClassA, a.constructor);
+    },
+
+    'test property error': function() {
+        try {
+            var ClassA = nClass.create({
+                obj: {},
+            });
+        } catch(e) {
+            assertTrue(e instanceof nClass.PropertyTypeError);
+            return;
+        }
+
+        fail();
+    },
+
+    'test argument error': function() {
+        try {
+            var ClassA = nClass.create('foo', {});
+        } catch(e) {
+            assertTrue(e instanceof nClass.InvalidArgumentError);
+            return;
+        }
+
+        fail();
     }
 });

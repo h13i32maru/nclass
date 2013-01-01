@@ -121,5 +121,30 @@ TestCase('nClassExtendTest', {
         assertSame(b1.$static, b2.$static);
         assertSame(x, b1.$static.x);
         assertSame(x, b2.$static.x);
+    },
+
+    'test override error': function() {
+        try {
+            var ClassA = nClass.create({});
+            var ClassB = nClass.extend(ClassA, {
+                say: function($super) {
+                }
+            });
+        } catch(e) {
+            assertTrue(e instanceof nClass.OverrideError);
+            return;
+        }
+        fail();
+    },
+
+    'test argument error': function() {
+        try {
+            var ClassB = nClass.extend({});
+        } catch(e) {
+            assertTrue(e instanceof nClass.InvalidArgumentError);
+            return;
+        }
+
+        fail();
     }
 });
