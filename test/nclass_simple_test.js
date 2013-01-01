@@ -64,5 +64,11 @@ TestCase('nClassSimpleTest', {
         a1.$static.num = 20;
         assertEquals(20, a1.$static.num);
         assertEquals(20, a2.$static.num);
+    },
+
+    'test access constructor': function() {
+        var a = new this.ClassA();
+
+        assertSame(this.ClassA, a.constructor);
     }
 });
