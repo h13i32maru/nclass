@@ -1,5 +1,5 @@
 # nClass
-nClass is pure javascript class system.
+nClass is javascript class system.
 
 ## loading script
 ```html
