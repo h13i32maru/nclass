@@ -10,7 +10,7 @@ nClass is javascript class system.
 `nClass(prototypeObject)` creates class using prototype object.
 
 - `initialize` runs automatically when creating object with `new` operator.
-- value of property in prototype object must be primitive or null.
+- value of property in prototype object must be primitive(number, string, boolean), function or null.
     - if you use object value({}, [], etc), assign in `initialize` function.
 
 ```javascript
@@ -133,7 +133,7 @@ b.history; //[10, 20]
 ```
 
 ## Static property
-`$static` is common property in the same class.
+`$static` is common property in objects which creating same class.
 
 ```javascript
 var ClassA = nClass({
