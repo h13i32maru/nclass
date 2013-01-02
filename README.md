@@ -7,7 +7,11 @@ nClass is javascript class system.
 ```
 
 ## Simple class
-`nClass(prototypeObject)` create class using prototype object.
+`nClass(prototypeObject)` creates class using prototype object.
+
+- `initialize` runs automatically when creating object with `new` operator.
+- value of property in prototype object must be primitive or null.
+    - if you use object value({}, [], etc), assign in `initialize` function.
 
 ```javascript
 var ClassA = nClass({
@@ -29,18 +33,62 @@ var ClassA = nClass({
 });
 
 var a = new ClassA(100);
-console.log(a.num); //100
-console.log(a.list); //[]
+a.num; // 100
+a.list; // []
 
 a.addNum(10);
-console.log(a.num); //110
+a.num; // 110
 
 a.pushData('food');
-console.log(a.list); //['food']
+a.list; // ['food']
 ```
 
 ## Extend class
-`nClass(superClass, prototypeObject)` create class using super class.
+`nClass(superClass, prototypeObject)` creates class using super class.
+
+- Using extend class, reuse function and property in super class.
+
+```javascript
+var ClassA = nClass({
+    num: 0,
+    list: null,
+
+    initialize: function(num) {
+        this.num = num;
+        this.list = [];
+    },
+
+    addNum: function(num) {
+        this.num += num;
+    },
+
+    pushData: function(data) {
+        this.list.push(data);
+    }
+});
+
+var ClassB = nClass(ClassA, {
+    resetNum: function() {
+        this.num = 0;
+    }
+});
+
+var b = new ClassB(10);
+
+b.addNum(20);
+b.num; // 30
+
+b.pushData('book');
+b.list; // ['book']
+
+b.resetNum();
+b.num; // 0
+```
+
+## Using override function
+`$super` argument in function overrides super class function.
+
+- if you want to use super class function in overriding function, first argument of the function must be `$super`.
 
 ```javascript
 var ClassA = nClass({
@@ -74,22 +122,14 @@ var ClassB = nClass(ClassA, {
         $super(num);
         this.history.push(num);
     },
-
-    getHistory: function() {
-        return this.history.join(' > ');
-    }
 });
 
 var b = new ClassB(10, 'car');
 
 b.addNum(10);
 b.addNum(20);
-console.log(b.num); //40
-console.log(b.history); //[10, 20]
-console.log(b.getHistory()); //'10 > 20'
-
-b.pushData('book');
-console.log(b.list); //['car', 'book']
+b.num; //40
+b.history; //[10, 20]
 ```
 
 ## Static property
@@ -118,7 +158,7 @@ console.log(a2.$static.data); //['food', 'book']
 
 ## Attention
 ### Property type error
-property in prototype object is primitive or null.
+property in prototype object must be primitive or null.
 
 ```javascript
 var ClassA = nClass({
@@ -126,7 +166,7 @@ var ClassA = nClass({
 });
 ```
 
-if use object data, use initialize function.
+if use object data, use `initialize` function.
 
 ```javascript
 var ClassA = nClass({
@@ -150,7 +190,7 @@ var ClassB = nClass({
 });
 ```
 
-Don't use $super.
+Don't use `$super`.
 ```javascript
 var ClassA = nClass({});
 
