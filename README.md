@@ -1,6 +1,13 @@
 # nClass
 nClass is javascript class system.
 
+- MIT license
+- create class (functions that are used in conjunction with `new` operator)
+- constructor function (run automatically when creating object)
+- extend class (extend super class function and property)
+- override function (can call super class function in child class function)
+- class property (common property in objects which creating same class.)
+
 ## loading script
 ```html
 <script src="path/to/nclass.js"></script>
@@ -10,7 +17,7 @@ nClass is javascript class system.
 `nClass(prototypeObject)` creates class using prototype object.
 
 - `initialize` runs automatically when creating object with `new` operator.
-- value of property in prototype object must be primitive(number, string, boolean), function or null.
+- value of property in `prototypeObject` must be primitive(number, string, boolean), function or null.
     - if you use object value({}, [], etc), assign in `initialize` function.
 
 ```javascript
@@ -158,7 +165,7 @@ console.log(a2.$static.data); //['food', 'book']
 
 ## Attention
 ### Property type error
-property in prototype object must be primitive or null.
+property in `prototypeObject` must be primitive(number, string, boolean), function or null.
 
 ```javascript
 var ClassA = nClass({
