@@ -6,6 +6,7 @@ nClass is javascript class system.
 - constructor function (run automatically when creating object)
 - extend class (extend super class function and property)
 - override function (can call super class function in child class function)
+- direct instance from anonymous class (like singleton)
 - class property (common property in objects which creating same class.)
 
 ## loading script
@@ -139,6 +140,29 @@ b.num; //40
 b.history; //[10, 20]
 ```
 
+## Direct instance
+`nClass.instance(prorotypeObj)` or `nClass.instance(superClass, prototypeObj)` creates instance.
+
+- the instance has not yet been initialized. call manually `initialize()`.
+- like singleton pattern.
+
+```javascript
+var InstanceA = nClass.instance({
+    data: null,
+
+    initialize: function() {
+        this.data = [];
+    },
+
+    pushData: function(data) {
+        this.data.push(data);
+    }
+});
+
+InstanceA.initialize();
+InstanceA.pushData('foo');
+```
+
 ## Static property
 `$static` is common property in objects which creating same class.
 
@@ -159,8 +183,8 @@ var a2 = new ClassA();
 a1.pushData('food');
 a2.pushData('book');
 
-console.log(a1.$static.data); //['food', 'book']
-console.log(a2.$static.data); //['food', 'book']
+a1.$static.data; //['food', 'book']
+a2.$static.data; //['food', 'book']
 ```
 
 ## Attention
