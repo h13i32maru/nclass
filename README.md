@@ -2,12 +2,12 @@
 nClass is javascript class system.
 
 - MIT license
-- create class (functions that are used in conjunction with `new` operator)
-- constructor function (run automatically when creating object)
-- extend class (extend super class function and property)
-- override function (can call super class function in child class function)
-- direct instance from anonymous class (like singleton)
-- class property (common property in objects which creating same class.)
+- create class. (functions that are used in conjunction with `new` operator.)
+- constructor function. (run automatically when creating instance.)
+- extend class. (extend function and property of super class.)
+- override function. (can call super class function in child class function)
+- direct instance from anonymous class. (like singleton.)
+- class property. (common property in instances which creating same class.)
 
 ## loading script
 ```html
@@ -17,7 +17,7 @@ nClass is javascript class system.
 ## Simple class
 `nClass(prototypeObject)` creates class using prototype object.
 
-- `initialize` runs automatically when creating object with `new` operator.
+- `initialize` runs automatically when creating instance with `new` operator.
 - value of property in `prototypeObject` must be primitive(number, string, boolean), function or null.
     - if you use object value({}, [], etc), assign in `initialize` function.
 
@@ -141,7 +141,7 @@ b.history; //[10, 20]
 ```
 
 ## Direct instance
-`nClass.instance(prorotypeObj)` or `nClass.instance(superClass, prototypeObj)` creates instance.
+`nClass.instance(prorotypeObject)` and `nClass.instance(superClass, prototypeObject)` creates instance.
 
 - the instance has not yet been initialized. call manually `initialize()`.
 - like singleton pattern.
@@ -164,7 +164,7 @@ InstanceA.pushData('foo');
 ```
 
 ## Static property
-`$static` is common property in objects which creating same class.
+`$static` is common property in instances which creating same class.
 
 ```javascript
 var ClassA = nClass({
