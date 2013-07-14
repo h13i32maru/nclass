@@ -1,25 +1,24 @@
 # nClass
-nClass is javascript class system.
+JavaScriptでクラスを実現するライブラリ
 
-- MIT license
-- create class. (functions that are used in conjunction with `new` operator.)
-- constructor function. (run automatically when creating instance.)
-- extend class. (extend function and property of super class.)
-- override function. (can call super class function in child class function)
-- direct instance from anonymous class. (like singleton.)
-- class property. (common property in instances which creating same class.)
+- MITライセンス
+- クラスの生成 (new演算子と共につかう関数)
+- コンストラクタ関数 (インスタンス生成時に自動実行される関数)
+- クラスの継承 (親クラスの機能を継承して拡張)
+- 関数のオーバーライド (関数のオーバーライド時に親クラスの関数呼び出し機能)
+- 無名クラスから直接インスタンス生成 (シングルトンパターン)
+- クラス変数 (同じクラスから生成されたインスタンスで共通の変数)
 
-## loading script
+## ライブラリの読み込み
 ```html
 <script src="path/to/nclass.js"></script>
 ```
 
-## Simple class
-`nClass(prototypeObject)` creates class using prototype object.
-
-- `initialize` runs automatically when creating instance with `new` operator.
-- value of property in `prototypeObject` must be primitive(number, string, boolean), function or null.
-    - if you use object value({}, [], etc), assign in `initialize` function.
+## クラス
+`nClass(prototypeObject)`を使ってクラスを生成します.
+- `initialize` 関数は`new`演算子を使ったインスタンス生成時に自動的に実行される関数です.
+- `prototypeObject` のプロパティの値は基本型(number, string, boolean)、関数もしくはnullにする必要があります.
+  - もしオブジェクト({}, [], etc...)を使用したい場合は `initialize` 関数内で値を代入してください.
 
 ```javascript
 var ClassA = nClass({
@@ -51,10 +50,10 @@ a.pushData('food');
 a.list; // ['food']
 ```
 
-## Extend class
-`nClass(superClass, prototypeObject)` creates class using super class.
+## 継承を使ったクラス
+`nClass(superClass, prototypeObject)` は親クラスを使用してクラスを生成します.
 
-- Using extend class, reuse function and property in super class.
+- 継承を使うことで、親クラスの関数とプロパティを再利用することができます.
 
 ```javascript
 var ClassA = nClass({
@@ -93,10 +92,10 @@ b.resetNum();
 b.num; // 0
 ```
 
-## Using override function
-`$super` argument in function overrides super class function.
+## オーバーライド関数
+関数内で `$super` 引数を使うことで、親クラスの関数をオーバーライドすることができます.
 
-- if you want to use super class function in overriding function, first argument of the function must be `$super`.
+- オーバーライドした関数内で親クラスの関数を使用したい場合、その関数の最初の引数を `$super` としてください.
 
 ```javascript
 var ClassA = nClass({
@@ -140,11 +139,11 @@ b.num; //40
 b.history; //[10, 20]
 ```
 
-## Direct instance
-`nClass.instance(prorotypeObject)` and `nClass.instance(superClass, prototypeObject)` creates instance.
+## インスタンスを直接生成
+`nClass.instance(prorotypeObject)` と `nClass.instance(superClass, prototypeObject)` はインスタンスを生成します.
 
-- the instance has not yet been initialized. call manually `initialize()`.
-- like singleton pattern.
+- 生成されたインスタンスは初期化されていないので、 `initialized()` を手動で実行する必要があります.
+- シングルトンパターンに似たことを実現できます.
 
 ```javascript
 var InstanceA = nClass.instance({
@@ -163,8 +162,8 @@ InstanceA.initialize();
 InstanceA.pushData('foo');
 ```
 
-## Static property
-`$static` is common property in instances which creating same class.
+## Staticプロパティ
+- `$static` は同じクラスから生成されたインスタンス内で共通のプロパティとなります.
 
 ```javascript
 var ClassA = nClass({
@@ -187,9 +186,10 @@ a1.$static.data; //['food', 'book']
 a2.$static.data; //['food', 'book']
 ```
 
-## Attention
-### Property type error
-property in `prototypeObject` must be primitive(number, string, boolean), function or null.
+## 注意
+
+### プロパティ型エラー
+`prototypeObject` 内のプロパティは基本型(number, string, booelan)、関数もしくはnullとする必要があります.
 
 ```javascript
 var ClassA = nClass({
@@ -197,7 +197,7 @@ var ClassA = nClass({
 });
 ```
 
-if use object data, use `initialize` function.
+もしオブジェクトを使いたい場合は `initialize` 関数内で代入してください.
 
 ```javascript
 var ClassA = nClass({
@@ -209,8 +209,8 @@ var ClassA = nClass({
 });
 ```
 
-### Override error
-Can't override function which not existing in super classes.
+### オーバーライドエラー
+親クラス(先祖クラス)に存在しない関数をオーバーライドすることはできません.
 
 ```javascript
 var ClassA = nClass({});
@@ -221,7 +221,8 @@ var ClassB = nClass({
 });
 ```
 
-Don't use `$super`.
+`$super` を使わないようにしてください.
+
 ```javascript
 var ClassA = nClass({});
 
